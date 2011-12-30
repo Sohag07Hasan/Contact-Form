@@ -7,6 +7,7 @@ $email = trim($_POST['buyer_email']);
 $phone = trim($_POST['buyer_phone']);
 $subject = trim($_POST['buyer_subject']);
 $message = $_POST['buyer_message'];
+$car_link = $_POST['perma_link'];
 
 if($name == ''){
 	$notification = "<div class='error'><p> Name is required !</p></div>";
@@ -34,7 +35,7 @@ $headers = 'From : '.$blogname.' < '.$email.' >' . "\r\n" .
 	'Reply-To: '. $email . "\r\n" .
 	'X-Mailer: PHP/' . phpversion();
 
-$msg = " Name: $name \n Email: $email \n Phone: $phone \n Ove Link: $ove_link \n Retail Link: $retail_link \n Message: $message";
+$msg = " Name: $name \n Email: $email \n Phone: $phone \n Car Link: $car_link \n Ove Link: $ove_link \n Retail Link: $retail_link \n Message: $message";
 if(wp_mail($to,$subject,$msg,$headers)){
 	$notification = "<div class='updated'><p>Email has been sent! </p></div>";
 	
@@ -42,4 +43,3 @@ if(wp_mail($to,$subject,$msg,$headers)){
 else{
 	$notification = "<div class='error'><p> Email can't be sent! Please check the information and try again </p></div>";
 }
-

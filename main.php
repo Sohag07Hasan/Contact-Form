@@ -12,10 +12,15 @@
  
 	class ove_contact_info{
 		function __construct(){
-			add_action('ove_contact_form',array($this,'contact_form'));
+            add_action('ove_contact_form',array($this,'contact_form'));
 		}
 		
 		function contact_form($post){
+            
+            $action = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $action = preg_replace('/#.+$/','',$action);
+            $action = rtrim($action,'/');
+            $action .= '/#commentsform';
 			
 			//if the form is submitted
 			$notification = '';
@@ -27,12 +32,13 @@
 				include dirname(__FILE__) . '/includes/form-submitted.php';
 			endif;
 			
+             $post_link = get_permalink($post->ID);
 			$vin = get_post_meta($post->ID, 'vin_value', true);
 			$mmr = $this->mmr_sanitization(get_post_meta($post->ID, 'mmr_value', true));
 			$ove_link = 'https://www.ove.com/vdp/show/' . $mmr;
 			$retail_link = 'https://www.ove.com/listing/retail_view/' . $mmr;
 			
-			echo $notification;
+			
 			?>
 			
 			<style type='text/css'>
@@ -54,12 +60,15 @@
 				
 			</style>
 			
-			<form action='' method='post' id="commentsform">
+            <form action="<?php echo $action; ?>" method='post' id="commentsform">
+                    <?php echo $notification; ?>
+                
 				<input type='hidden' name='ove_conatact_form' value='Y' />
 				
 				<input type='hidden' name='ove_vin' value="<?php echo $vin; ?>" />
 				<input type='hidden' name='ove_link' value="<?php echo $ove_link; ?>" />
 				<input type='hidden' name='retail_link' value="<?php echo $retail_link; ?>" />
+                                <input type='hidden' name='perma_link' value="<?php echo $post_link; ?>" />
 				
 				<p>
 					<label for="buyer_name">Name <span>(required)</span></label>
